@@ -1,0 +1,21 @@
+# Backend context
+backend/.venv
+backend/db.sqlite3
+backend/staticfiles
+backend/media/**/*.onnx
+backend/media/student_faces
+backend/media/recognition
+backend/.env
+**/__pycache__
+**/*.pyc
+
+# Frontend context
+frontend/node_modules
+frontend/dist
+
+# Git / IDE
+.git
+.gitignore
+.idea
+.vscode
+*.log

@@ -1,0 +1,78 @@
+name: smart-attendance
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-smart_attendance}
+      POSTGRES_USER: ${POSTGRES_USER:-attendance}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-attendance}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-attendance} -d ${POSTGRES_DB:-smart_attendance}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - "5432:5432"
+
+  # One-shot: downloads the two ONNX model files into the shared models volume.
+  models:
+    image: python:3.11-slim
+    restart: "no"
+    command: ["python", "/app/scripts/download_models.py", "/app/models"]
+    volumes:
+      - ./scripts:/app/scripts
+      - models_data:/app/models
+    environment:
+      AI_MODELS_DIR: /app/models
+
+  backend:
+    build:
+      context: ./backend
+    restart: unless-stopped
+    environment:
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:?set DJANGO_SECRET_KEY in .env}
+      DEBUG: ${DEBUG:-False}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS:-localhost,127.0.0.1,backend}
+      DB_ENGINE: postgres
+      POSTGRES_DB: ${POSTGRES_DB:-smart_attendance}
+      POSTGRES_USER: ${POSTGRES_USER:-attendance}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-attendance}
+      POSTGRES_HOST: db
+      POSTGRES_PORT: "5432"
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:8080}
+      AI_MODELS_DIR: /app/backend/media/models
+      RECOGNITION_THRESHOLD: ${RECOGNITION_THRESHOLD:-0.35}
+      ACCESS_TOKEN_MINUTES: ${ACCESS_TOKEN_MINUTES:-60}
+      REFRESH_TOKEN_DAYS: ${REFRESH_TOKEN_DAYS:-7}
+      REMEMBER_ME_REFRESH_DAYS: ${REMEMBER_ME_REFRESH_DAYS:-30}
+      TIME_ZONE: ${TIME_ZONE:-Asia/Kolkata}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    volumes:
+      - models_data:/app/backend/media/models
+      - media_data:/app/backend/media/student_faces
+      - media_data:/app/backend/media/recognition
+    depends_on:
+      db:
+        condition: service_healthy
+      models:
+        condition: service_completed_successfully
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build:
+      context: ./frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "8080:80"
+
+volumes:
+  pgdata:
+  models_data:
+  media_data:

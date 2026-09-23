@@ -1,0 +1,10 @@
+.venv
+db.sqlite3
+staticfiles
+.env
+media/**/*.onnx
+media/student_faces
+media/recognition
+**/__pycache__
+**/*.pyc
+*.log
