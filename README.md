@@ -1,3 +1,878 @@
+
+# AttendVision AI 🎓🤖
+
+## AI-Powered Face Recognition Attendance System
+
+AttendVision AI is a web-based smart attendance management system that uses **Artificial Intelligence, Computer Vision, and Face Recognition** to automate classroom attendance.
+
+The system allows teachers to manage classes, divisions, subjects, and students, register student faces, capture classroom images through a camera or upload images, automatically recognize registered students, mark attendance, review attendance records, and generate attendance reports and analytics.
+
+---
+
+## 📌 Project Overview
+
+Traditional attendance systems are often time-consuming and require manual record keeping. AttendVision AI provides an automated approach where students can be identified using facial recognition and their attendance can be recorded digitally.
+
+The system is designed for educational institutions such as:
+
+* Engineering colleges
+* Schools
+* Universities
+* Coaching institutes
+* Training centers
+
+The platform provides a complete workflow from **student registration → face enrollment → face recognition → attendance marking → verification → reports and analytics**.
+
+---
+
+## ✨ Key Features
+
+### 👨‍🏫 Teacher Authentication
+
+* Secure teacher login
+* JWT-based authentication
+* Access and refresh tokens
+* Remember-me functionality
+* Profile management
+* Password change
+* Forgot password and reset password
+* Protected application routes
+
+### 🏫 Class & Subject Management
+
+Teachers can manage:
+
+* Classes
+* Divisions
+* Subjects
+* Academic years
+* Class descriptions
+* Subject codes
+
+### 👨‍🎓 Student Management
+
+Teachers can:
+
+* Add students
+* Update student information
+* View student details
+* Manage roll numbers
+* Store student ID/PRN
+* Store email and mobile number
+* Assign students to divisions
+* Track face-registration status
+
+### 📸 Face Registration
+
+Students can have their face registered using photographs.
+
+The AI pipeline performs:
+
+1. Face detection
+2. Face validation
+3. Face alignment/preprocessing
+4. Face embedding generation
+5. Embedding storage
+6. Student identity association
+
+Multiple enrollment photographs can be used to improve recognition across different poses and lighting conditions.
+
+### 🧠 AI Face Recognition
+
+AttendVision AI uses computer vision and deep-learning-based face recognition.
+
+The system:
+
+1. Captures or receives an attendance image
+2. Detects faces
+3. Processes each detected face independently
+4. Generates a face embedding
+5. Compares the embedding against registered students
+6. Calculates similarity
+7. Identifies the student when the similarity passes the configured threshold
+8. Marks attendance automatically
+
+Unknown or low-quality faces are not automatically treated as known students.
+
+### 👥 Group Photo Recognition
+
+The system supports multiple faces in a single classroom image.
+
+For example:
+
+```text
+Classroom Image
+      │
+      ▼
+Face Detection
+      │
+ ┌────┼────┐
+ ▼    ▼    ▼
+Face  Face  Face
+ 1     2     3
+ │     │     │
+ ▼     ▼     ▼
+Embedding Generation
+ │     │     │
+ └─────┼─────┘
+       ▼
+Face Matching
+       │
+       ▼
+Attendance Records
+```
+
+Each detected face is processed independently.
+
+### ✅ Attendance Management
+
+The attendance module supports:
+
+* Attendance session creation
+* Automatic attendance marking
+* Present/absent records
+* Manual attendance correction
+* AI-marked attendance
+* Manually updated attendance
+* Attendance finalization
+* Duplicate attendance protection
+* Attendance history
+* Session details
+
+### 📊 Dashboard & Analytics
+
+The dashboard provides information such as:
+
+* Total students
+* Total classes
+* Total divisions
+* Total subjects
+* Today's attendance
+* Overall attendance percentage
+* Class-wise attendance
+* Recent attendance sessions
+* Attendance trends
+
+### 📑 Reports
+
+The system is designed to provide attendance reporting functionality for teachers and administrators.
+
+Reports can include:
+
+* Student attendance
+* Class attendance
+* Subject attendance
+* Attendance percentage
+* Session records
+* Attendance history
+
+---
+
+# 🧠 AI Technology
+
+AttendVision AI uses a modern face-recognition pipeline.
+
+## Face Detection
+
+**OpenCV YuNet**
+
+YuNet is used to detect faces from:
+
+* Registration images
+* Uploaded attendance images
+* Classroom/group images
+* Camera frames
+
+## Face Recognition
+
+**InsightFace / ArcFace**
+
+The recognition model generates a numerical representation called a **face embedding**.
+
+The project uses a **512-dimensional embedding** representation.
+
+The embedding allows the system to compare faces mathematically instead of comparing raw images.
+
+## Face Matching
+
+The system uses **cosine similarity** to compare the query face embedding with registered face embeddings.
+
+Conceptually:
+
+```text
+Registration Image
+        ↓
+Face Detection
+        ↓
+Face Embedding
+        ↓
+Store Embedding
+        ↓
+        ┌───────────────────────┐
+        │ Attendance Image      │
+        └───────────┬───────────┘
+                    ↓
+             Face Detection
+                    ↓
+             Face Embedding
+                    ↓
+          Similarity Comparison
+                    ↓
+             Match / Unknown
+                    ↓
+          Attendance Decision
+```
+
+---
+
+# 🏗️ System Architecture
+
+```text
+                    ┌─────────────────────┐
+                    │      Teacher        │
+                    │      Web Browser    │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │    React Frontend   │
+                    │       + Vite        │
+                    └──────────┬──────────┘
+                               │ REST API
+                               ▼
+                    ┌─────────────────────┐
+                    │   Django Backend    │
+                    │ Django REST API     │
+                    └───────┬─────┬───────┘
+                            │     │
+                ┌───────────┘     └────────────┐
+                ▼                              ▼
+      ┌─────────────────┐             ┌─────────────────┐
+      │   PostgreSQL    │             │   AI Engine     │
+      │    Database     │             │ OpenCV +        │
+      │                 │             │ YuNet +         │
+      │ Students        │             │ InsightFace     │
+      │ Classes         │             │ ArcFace         │
+      │ Attendance      │             └────────┬────────┘
+      │ Subjects        │                      │
+      │ Sessions        │                      ▼
+      └─────────────────┘             ┌─────────────────┐
+                                      │ Face Embeddings │
+                                      │ & Recognition   │
+                                      └─────────────────┘
+```
+
+---
+
+# 🛠️ Technology Stack
+
+## Frontend
+
+| Technology            | Purpose             |
+| --------------------- | ------------------- |
+| React.js              | User interface      |
+| Vite                  | Frontend build tool |
+| Tailwind CSS          | Styling             |
+| Axios                 | API communication   |
+| React Router          | Application routing |
+| Lucide                | Icons               |
+| Recharts / Charts     | Data visualization  |
+| WebRTC / MediaDevices | Camera access       |
+
+## Backend
+
+| Technology            | Purpose                    |
+| --------------------- | -------------------------- |
+| Python                | Backend and AI development |
+| Django                | Web backend                |
+| Django REST Framework | REST APIs                  |
+| JWT                   | Authentication             |
+| PostgreSQL            | Database                   |
+
+## AI / Computer Vision
+
+| Technology        | Purpose              |
+| ----------------- | -------------------- |
+| OpenCV            | Image processing     |
+| YuNet             | Face detection       |
+| InsightFace       | Face recognition     |
+| ArcFace           | Face embeddings      |
+| NumPy             | Numerical operations |
+| Cosine Similarity | Face matching        |
+
+## Development Tools
+
+* Git
+* GitHub
+* VS Code
+* PowerShell
+* Postman
+* PostgreSQL
+* Python Virtual Environment
+
+---
+
+# 📁 Project Structure
+
+```text
+AttendVision-AI/
+│
+├── backend/
+│   ├── manage.py
+│   ├── config/
+│   ├── accounts/
+│   ├── students/
+│   ├── classes/
+│   ├── attendance/
+│   ├── reports/
+│   ├── ai/
+│   ├── media/
+│   ├── requirements.txt
+│   └── .env
+│
+├── frontend/
+│   ├── public/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   ├── lib/
+│   │   ├── App.jsx
+│   │   ├── main.jsx
+│   │   └── index.css
+│   ├── package.json
+│   └── vite.config.js
+│
+├── docs/
+│
+├── scripts/
+│
+├── docker-compose.yml
+├── .gitignore
+├── .env.example
+├── LICENSE
+└── README.md
+```
+
+---
+
+# 🔄 Attendance Workflow
+
+## Step 1 — Teacher Login
+
+The teacher logs into the AttendVision AI dashboard.
+
+```text
+Teacher
+   ↓
+Login
+   ↓
+JWT Authentication
+   ↓
+Dashboard
+```
+
+## Step 2 — Create Class
+
+Teacher creates:
+
+* Class
+* Division
+* Subject
+* Academic Year
+
+## Step 3 — Register Students
+
+Teacher adds student information and uploads student photographs.
+
+```text
+Student Information
+        +
+Student Photograph
+        ↓
+Face Detection
+        ↓
+Face Validation
+        ↓
+Face Embedding
+        ↓
+Face Registration
+```
+
+## Step 4 — Start Attendance Session
+
+Teacher selects the required class/division/subject and starts an attendance session.
+
+## Step 5 — Capture Classroom Image
+
+The teacher can use the camera or upload a classroom photograph.
+
+## Step 6 — AI Recognition
+
+The system detects all faces in the image.
+
+Each face is processed separately.
+
+```text
+Classroom Image
+       ↓
+Detect Faces
+       ↓
+Extract Face
+       ↓
+Generate Embedding
+       ↓
+Compare With Registered Faces
+       ↓
+Similarity Score
+       ↓
+Known / Unknown / Low Quality
+```
+
+## Step 7 — Attendance Marking
+
+Recognized students are marked present.
+
+Students who are not recognized remain absent unless manually corrected.
+
+## Step 8 — Review
+
+The teacher can review the AI-generated attendance and manually correct records when required.
+
+## Step 9 — Finalize
+
+After verification, the teacher finalizes the attendance session.
+
+---
+
+# 🔐 Security
+
+The application includes several security mechanisms:
+
+* JWT authentication
+* Protected API endpoints
+* Protected frontend routes
+* Teacher-specific data access
+* Password protection
+* Token refresh mechanism
+* Database constraints
+* Duplicate attendance prevention
+* Configurable face-recognition threshold
+* Unknown-face handling
+* Environment variables for secrets
+
+Sensitive configuration such as database passwords and Django secret keys should be stored in `.env` and should **never be committed to GitHub**.
+
+---
+
+# 📊 Attendance Logic
+
+Attendance records use a session-based approach.
+
+Each attendance session is associated with:
+
+```text
+Class
+  │
+  ├── Division
+  │
+  ├── Subject
+  │
+  └── Attendance Session
+           │
+           ├── Student 1 → Present
+           ├── Student 2 → Absent
+           ├── Student 3 → Present
+           └── Student 4 → Absent
+```
+
+The system prevents duplicate attendance records for the same student within the same session.
+
+---
+
+# 🧪 AI Recognition States
+
+The recognition system can classify detected faces into different states:
+
+| State         | Meaning                                                 |
+| ------------- | ------------------------------------------------------- |
+| `KNOWN`       | Face successfully matched with a registered student     |
+| `UNKNOWN`     | Face detected but no sufficiently strong identity match |
+| `LOW_QUALITY` | Face quality is insufficient for reliable recognition   |
+
+The recognition threshold is configurable and should be calibrated using representative genuine and unknown samples rather than blindly lowering the threshold.
+
+---
+
+# ⚙️ Installation
+
+## Requirements
+
+Install the following:
+
+* Python 3.x
+* Node.js
+* npm
+* PostgreSQL
+* Git
+
+---
+
+# 🚀 Backend Setup
+
+Navigate to the backend:
+
+```powershell
+cd backend
+```
+
+Create a virtual environment:
+
+```powershell
+python -m venv .venv
+```
+
+Activate it:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+Install dependencies:
+
+```powershell
+pip install -r requirements.txt
+```
+
+Create your environment file:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+Configure your PostgreSQL database and application settings inside `.env`.
+
+Run migrations:
+
+```powershell
+python manage.py migrate
+```
+
+Create an administrator:
+
+```powershell
+python manage.py createsuperuser
+```
+
+Start the Django server:
+
+```powershell
+python manage.py runserver
+```
+
+Backend:
+
+```text
+http://127.0.0.1:8000
+```
+
+---
+
+# 🎨 Frontend Setup
+
+Open another terminal.
+
+```powershell
+cd frontend
+```
+
+Install dependencies:
+
+```powershell
+npm install
+```
+
+Start the development server:
+
+```powershell
+npm run dev
+```
+
+Frontend:
+
+```text
+http://localhost:5173
+```
+
+---
+
+# 🔌 API Structure
+
+The backend exposes REST APIs for the main application modules.
+
+```text
+/api/auth/
+/api/classes/
+/api/students/
+/api/attendance/
+/api/reports/
+/api/dashboard/statistics
+```
+
+### Authentication
+
+```text
+POST /api/auth/login
+POST /api/auth/refresh
+POST /api/auth/logout
+GET  /api/auth/me
+POST /api/auth/profile
+POST /api/auth/change-password
+```
+
+### Classes
+
+```text
+/api/classes/
+```
+
+### Students
+
+```text
+/api/students/
+```
+
+### Attendance
+
+```text
+/api/attendance/sessions/
+/api/attendance/history
+/api/attendance/trend
+/api/attendance/summary/<student_id>
+```
+
+### Dashboard
+
+```text
+GET /api/dashboard/statistics
+```
+
+---
+
+# 🖥️ Main Application Modules
+
+```text
+┌──────────────────────────────────────────┐
+│              AttendVision AI             │
+├──────────────────────────────────────────┤
+│                                          │
+│  🔐 Authentication                       │
+│                                          │
+│  📊 Dashboard                            │
+│                                          │
+│  🏫 Classes & Divisions                  │
+│                                          │
+│  👨‍🎓 Student Management                  │
+│                                          │
+│  📸 Face Registration                    │
+│                                          │
+│  🤖 AI Attendance                        │
+│                                          │
+│  📋 Attendance History                   │
+│                                          │
+│  📈 Analytics                            │
+│                                          │
+│  📑 Reports                              │
+│                                          │
+│  👤 Profile                              │
+│                                          │
+└──────────────────────────────────────────┘
+```
+
+---
+
+# 🧪 Testing
+
+The project includes testing of important attendance and recognition scenarios such as:
+
+* Registered student recognition
+* Unknown face detection
+* Group photo recognition
+* Multiple faces
+* Absent students
+* Manual attendance correction
+* Duplicate attendance prevention
+* Attendance finalization
+* Attendance history
+* Attendance statistics
+
+Example recognition result:
+
+```text
+Student: Parth Ahire
+Similarity: 99.9%
+Status: KNOWN
+Attendance: PRESENT
+```
+
+Example unknown result:
+
+```text
+Similarity: 56.2%
+Status: UNKNOWN
+Attendance: NOT MARKED
+```
+
+---
+
+# 📈 Future Enhancements
+
+Possible future improvements include:
+
+* Real-time classroom camera recognition
+* Multi-camera attendance
+* Improved face-quality assessment
+* Multiple face enrollment per student
+* Email notifications
+* Student attendance portal
+* Parent notification system
+* Mobile application
+* Advanced attendance analytics
+* PDF and Excel report generation
+* Cloud deployment
+* Docker-based deployment
+* Role-based Admin/Teacher/Student access
+* Attendance prediction
+* Anti-spoofing / liveness detection
+* Improved recognition threshold calibration
+* Audit logs
+
+---
+
+# 🔒 Privacy & Responsible AI
+
+AttendVision AI processes biometric information for the purpose of attendance management.
+
+A production deployment should implement appropriate:
+
+* Student consent procedures
+* Institutional privacy policies
+* Data retention policies
+* Access controls
+* Encryption
+* Secure storage
+* Data deletion procedures
+* Audit logging
+
+Face embeddings and student photographs should not be publicly exposed.
+
+---
+
+# 🎓 Academic Project
+
+**Project:** AttendVision AI
+**Type:** Final Year Engineering Project
+**Domain:** Artificial Intelligence / Computer Vision / Web Development
+**Application:** Smart Classroom Attendance System
+
+---
+
+# 👨‍💻 Project Team
+
+| Member         | Role        |
+| -------------- | ----------- |
+| Ketan Patil    | Developer   |
+| Shubham Tidke  | Team Member |
+| Darshan Shinde | Team Member |
+| Tejas Lodha    | Team Member |
+
+**Group:** 27
+
+---
+
+# 📜 License
+
+This project is developed for educational and academic purposes.
+
+Add an appropriate open-source license to the repository if you intend to distribute the project publicly.
+
+---
+
+# ⭐ Project Vision
+
+The goal of AttendVision AI is to transform traditional classroom attendance into a **faster, smarter, and AI-assisted digital attendance experience**.
+
+```text
+Traditional Attendance
+        ↓
+Manual Roll Call
+        ↓
+Time Consuming
+        ↓
+Paper / Manual Records
+
+              ↓
+
+             AI
+
+              ↓
+
+AttendVision AI
+        ↓
+Face Detection
+        ↓
+Face Recognition
+        ↓
+Automatic Attendance
+        ↓
+Teacher Verification
+        ↓
+Digital Reports
+        ↓
+Analytics
+```
+
+**AttendVision AI — Making classroom attendance smarter with Artificial Intelligence.** 🤖🎓
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Smart Attendance System — AI Face Recognition
 
 A full-stack, production-style **AI Smart Attendance System** for colleges and schools. Teachers
@@ -460,5 +1335,6 @@ This system processes biometric information. It is designed to minimise risk:
 
 ## License
 
-MIT — see [LICENSE](LICENSE).#   A t t e n d V i s i o n - A I - A I - P o w e r e d - F a c e - R e c o g n i t i o n - A t t e n d a n c e - S y s t e m  
+MIT — see [LICENSE](LICENSE).#   A t t e n d V i s i o n - A I - A I - P o w e r e d - F a c e - R e c o g n i t i o n - A t t e n d a n c e - S y s t e m 
+ 
  
