@@ -1,7 +1,7 @@
   #!/usr/bin/env python
 """Download the pre-trained ONNX models required by the Smart Attendance System.
 
-Models:
+  Models:
   1. YuNet face detector       (OpenCV Zoo)   ~230 KB   -> face_detection_yunet_2023mar.onnx
   2. ArcFace w600k_r50 embeder (InsightFace)  ~166 MB   -> w600k_r50.onnx
 
