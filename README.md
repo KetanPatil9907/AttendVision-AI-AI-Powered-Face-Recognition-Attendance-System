@@ -7,7 +7,7 @@ AttendVision AI is a web-based smart attendance management system that uses **Ar
 
 The system allows teachers to manage classes, divisions, subjects, and students, register student faces, capture classroom images through a camera or upload images, automatically recognize registered students, mark attendance, review attendance records, and generate attendance reports and analytics. 
 
----
+--- 
 
 ## 📌 Project Overview
 
