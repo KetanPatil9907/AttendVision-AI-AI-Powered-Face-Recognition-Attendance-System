@@ -11,7 +11,7 @@ The system allows teachers to manage classes, divisions, subjects, and students,
 
 ## 📌 Project Overview
 
-Traditional attendance systems are often time-consuming and require manual record keeping. AttendVision AI provides an automated approach where students can be identified using facial recognition and their attendance can be recorded digitally.
+Traditional attendance systems are often time-consuming and require manual record keeping. AttendVision AI provides an automated  approach where students can be identified using facial recognition and their attendance can be recorded digitally.
 
 The system is designed for educational institutions such as:
 
